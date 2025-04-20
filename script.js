@@ -81,10 +81,10 @@ function initLevel() {
     markers = {};
     done = false;
     $("#bombs-n").text(countBombs());
-    renderLevel();
+    render();
 }
 
-function renderLevel() {
+function render() {
     $("#level").empty();
     for (let y = 0; y < height; y++) {
         const row = $("<tr>");
@@ -161,7 +161,7 @@ function click(evt) {
             processLevelDone();
         }
     }
-    renderLevel();
+    render();
 }
 
 function processRightClick(x, y) {
@@ -318,10 +318,6 @@ function processLevelDone() {
 }
 
 function nextButtonClick() {
-    if (currentLevel == 24) {
-        let link = atob('aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS9zZWFyY2g/c2NhX2Vzdj1kM2U0N2Y1YzQxZGFkMjhlJnJsej0xQzFHQ0NBX2VuJnN4c3JmPUFIVG44enE2UWZGQ09ZT2dhb2wtUjhGYWFiRGppMlVLM3c6MTc0NTE1ODQ2NDk4NyZxPWhvbWVucytkZStzdW5nYSZ1ZG09MiZmYnM9QUJ6T1RfQ1dkaFFMUDFGY21VNUIwZm4zeHVXcEEtZGs0d3BCV09Hc29SN0RHNXpKQnRtdUVkaGZ5d3l6aGVuZGtMRG5oY3JHdjBidnNGMDJQRTl3QWdhblEtZjFkSmpPclVHT0h5b2Nadm1YajZMaE90TlUxV3NzMmNBZEZ2V29yZFN0WDJVbXl3MF80bFowdGtwVGF6Z1JKRmpXcGloelpyRGFYNzVMWkNfMWpqVGRwMW9CaXJUZmJSNmhVY3Q3QlR0NmFPYS1lU0czJnNhPVgmdmVkPTJhaFVLRXdqUm9JZno1ZWFNQXhWM2J2RURIYU5vQnBFUXRLZ0xlZ1FJRUJBQiZiaXc9MTkyMCZiaWg9OTQ1JmRwcj0x');
-        window.open(link, '_blank');
-    }
     $("#next-btn").attr("disabled", true);
     currentLevel++;
     if (currentLevel > LEVELS.length) {
