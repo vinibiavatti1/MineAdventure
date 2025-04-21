@@ -75,3 +75,8 @@ body {
     background-color: black;
     color: white;
 }
+.tile-hint {
+    border: 4px outset #20c997!important;
+    background-color: #06281e!important;
+    color: #20c997!important;
+}

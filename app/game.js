@@ -1,7 +1,6 @@
-$(init);
+$(initGame);
 
 const FIRST_LEVEL = 0;
-const MAX_LIVES = 30;
 const TILES = {
     BOMB: -3,
     MINE: -2,
@@ -21,34 +20,41 @@ let currentLevelIndex = FIRST_LEVEL;
 let currentLevel = LEVELS[currentLevelIndex];
 let levelOver = false;
 let levelDone = false;
-let gameOver = false;
 let height = 0;
 let width = 0;
-let lives = MAX_LIVES;
+let deaths = 0;
 let levelMap = {};
 let markers = {};
+let playerName = "";
+let running = false;
+let time = {h: 0, m: 0, s: 0};
 
-function init() {
+function initGame() {
+    loadPlayerName();
     document.oncontextmenu = function() {return false;};
     $("#reset-btn").on("click", onResetClick);
+    $("#start-btn").on("click", onStartClick);
+    $("#next-btn").on("click", onNextClick);
     resetGame();
 }
 
 function resetGame() {
     currentLevelIndex = FIRST_LEVEL;
     currentLevel = LEVELS[currentLevelIndex];
-    lives = MAX_LIVES;
-    gameOver = false;
+    deaths = 0;
+    running = false;
+    time = {h: 0, m: 0, s: 0};
+    $("#start-btn").attr("disabled", false);
     resetLevel()
 }
 
 function resetLevel() {
     levelOver = false;
     levelDone = false;
-    gameOver = false;
     markers = {};
     createLevelMap();
     render();
+    markHintTile();
 }
 
 function createLevelMap() {
@@ -87,7 +93,7 @@ function renderMap() {
 function renderData() {
     $("#level").html(currentLevelIndex + 1);
     $("#level-count").html(LEVELS.length);
-    $("#lives").html(lives);
+    $("#deaths").html(deaths);
     $("#bombs").html(currentLevel.mines.length);
     $("#flags").html(Object.values(markers).filter(marker => marker === MARKERS.FLAG).length);
 }
@@ -143,7 +149,7 @@ function createTile(x, y, tile) {
 }
 
 function onTileClick(evt) {
-    if (gameOver || levelOver || levelDone) {
+    if (levelOver || levelDone || !running) {
         return;
     }
     let x = parseInt($(this).attr("data-x"));
@@ -154,6 +160,7 @@ function onTileClick(evt) {
         processMarker(x, y);
     }
     render();
+    checkVictory();
 }
 
 function processTile(x, y) {
@@ -162,7 +169,7 @@ function processTile(x, y) {
     }
     const tile = getTile(x, y);
     if (tile == TILES.UNKNOWN) {
-        const bombs = countSurroundingBombs(x, y);
+        const bombs = countSurroundingMines(x, y);
         setTile(x, y, bombs);
         if (bombs === 0) {
             processTile(x-1, y-1);
@@ -184,11 +191,7 @@ function processMine(x, y) {
     $("#reset-btn").attr("disabled", false);
     setTile(x, y, TILES.BOMB);
     levelOver = true;
-    lives--;
-    if (lives <= 0) {
-        alert("GAME OVER!");
-        gameOver = true;
-    }
+    deaths++;
 }
 
 function processMarker(x, y) {
@@ -247,7 +250,7 @@ function deleteMarker(x, y) {
     delete markers[posKey(x, y)];
 }
 
-function countSurroundingBombs(x, y) {
+function countSurroundingMines(x, y) {
     let count = 0;
     const targets = [
         isMine(x-1, y-1),
@@ -276,9 +279,92 @@ function isMine(x, y) {
 
 function onResetClick() {
     $("#reset-btn").attr("disabled", true);
-    if (gameOver) {
-        resetGame();
+    resetLevel();
+}
+
+function checkVictory() {
+    const remainingTiles = Object.values(levelMap).filter(tile => tile === TILES.UNKNOWN).length;
+    if (remainingTiles === 0) {
+        if (currentLevelIndex + 1 < LEVELS.length) {
+            currentLevelIndex++;
+            currentLevel = LEVELS[currentLevelIndex];
+            resetLevel();
+        } else {
+            alert("You have completed all levels!");
+            addRank();
+            currentLevelIndex = FIRST_LEVEL;
+            currentLevel = LEVELS[currentLevelIndex];
+            resetGame();
+            $("#time").html("00:00:00");
+            $("#rank-btn").click();
+        }
+    }
+}
+
+function loadPlayerName() {
+    playerName = localStorage.getItem("playerName");
+    if (!playerName) {
+        playerName = prompt("Enter your name:");
+        localStorage.setItem("playerName", playerName);
+    }
+}
+
+function startTimer() {
+    setInterval(() => {
+        if (running) {
+            incrementTime();
+            const formattedTime = [time.h, time.m, time.s]
+                .map(unit => unit.toString().padStart(2, "0"))
+                .join(":");
+            $("#time").text(formattedTime);
+        }
+    }, 1000);
+}
+
+function incrementTime() {
+    time.s++;
+    if (time.s >= 60) {
+        time.s = 0;
+        time.m++;
+        if (time.m >= 60) {
+            time.m = 0;
+            time.h++;
+        }
+    }
+}
+
+function onStartClick() {
+    alert("Go!");
+    startTimer();
+    running = true;
+    $("#start-btn").attr("disabled", true);
+}
+
+function markHintTile() {
+    let tiles = [];
+    for (let y = 0; y < currentLevel.height; y++) {
+        for (let x = 0; x < currentLevel.width; x++) {
+            if (getTile(x, y) == TILES.MINE) {
+                continue;
+            }
+            const mines = countSurroundingMines(x, y);
+            if (mines == 0) {
+                tiles.push($(`.tile[data-x="${x}"][data-y="${y}"]`));
+            }
+        }
+    }
+    if (tiles.length == 0) {
         return;
     }
-    resetLevel();
+    const randomTile = tiles[Math.floor(Math.random() * tiles.length)];
+    randomTile.addClass("tile-hint");
+    randomTile.text("!");
+}
+
+function onNextClick() {
+    if (currentLevelIndex + 1 < LEVELS.length) {
+        currentLevelIndex++;
+        currentLevel = LEVELS[currentLevelIndex];
+        resetLevel();
+    }
 }

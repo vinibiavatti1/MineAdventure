@@ -1,12 +1,19 @@
-$(init);
+$(initGame);
 
-function init() {
+let isMouseDown = false;
+$(document).on("mousedown", function () {
+    isMouseDown = true;
+}).on("mouseup", function () {
+    isMouseDown = false;
+});
+
+function initGame() {
     document.oncontextmenu = function() {return false;};
     $(".size-input").on("change keyup", sizeInputChange);
-    $("#script-btn").on("click", generateScript);
     $("#load-btn").on("click", loadLevel);
     createMap();
     renderLevelSelect();
+    generateScript();
 }
 
 function createMap() {
@@ -30,13 +37,22 @@ function createTile(x, y) {
     el.attr("data-x", x);
     el.attr("data-y", y);
     el.addClass("tile tile-unknown");
-    $(el).on("click", onTileClick);
+    el.on("mousedown", function (e) {
+        e.preventDefault(); 
+        onTileClick.call(this);
+    });
+    el.on("mouseenter", function () {
+        if (isMouseDown) {
+            onTileClick.call(this);
+        }
+    });
     spot.html(el);
     return spot;
 }
 
 function sizeInputChange() {
     createMap();
+    generateScript();
 }
 
 function onTileClick() {
@@ -48,6 +64,7 @@ function onTileClick() {
         el.addClass("tile-bomb");
         el.html("Ø");
     }
+    generateScript();
 }
 
 function generateScript() {
@@ -83,4 +100,5 @@ function loadLevel() {
         tile.removeClass("tile-unknown").addClass("tile-bomb");
         tile.html("Ø");
     });
+    generateScript();
 }
