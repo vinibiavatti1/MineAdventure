@@ -44,6 +44,8 @@ function resetGame() {
     deaths = 0;
     running = false;
     time = {h: 0, m: 0, s: 0};
+    $("#map").addClass("d-none");
+    $("#start-btn").text("Start");
     $("#start-btn").attr("disabled", false);
     resetLevel()
 }
@@ -108,8 +110,10 @@ function renderMarkers() {
         }
         const el = $(`.tile[data-x="${x}"][data-y="${y}"]`);
         if (value == MARKERS.FLAG) {
+            el.addClass("tile-flag");
             el.text("F");
         } else if (value == MARKERS.UNKNOWN) {
+            el.addClass("tile-unknown");
             el.text("?");
         }
     }
@@ -291,7 +295,7 @@ function checkVictory() {
             resetLevel();
         } else {
             alert("You have completed all levels!");
-            addRank();
+            addRank(playerName, time, deaths);
             currentLevelIndex = FIRST_LEVEL;
             currentLevel = LEVELS[currentLevelIndex];
             resetGame();
@@ -337,7 +341,9 @@ function onStartClick() {
     alert("Go!");
     startTimer();
     running = true;
+    $("#map").removeClass("d-none");
     $("#start-btn").attr("disabled", true);
+    $("#start-btn").text("Running...");
 }
 
 function markHintTile() {

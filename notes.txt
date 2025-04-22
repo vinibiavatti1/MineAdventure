@@ -1,5 +1,5 @@
-Se tiver B nao deixa clicar
-Mudar cor do fundo
-mudar cor do mark b
-Dificultar as fases
-Adicionar counter de b markers
+[V] Se tiver B nao deixa clicar
+[V] Mudar cor do fundo
+[V] mudar cor do mark b
+[V] Dificultar as fases
+[V] Adicionar counter de b markers

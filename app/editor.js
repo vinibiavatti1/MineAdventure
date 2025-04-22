@@ -83,7 +83,7 @@ function generateScript() {
 }
 
 function renderLevelSelect() {
-    LEVELS.forEach((level, index) => {
+    LEVELS.forEach((_, index) => {
         const option = $("<option>").val(index).text(`Level ${index + 1}`);
         $("#level-select").append(option);
     });
@@ -97,7 +97,7 @@ function loadLevel() {
     createMap();
     selectedLevel.mines.forEach(mine => {
         const tile = $(`.tile[data-x="${mine.x}"][data-y="${mine.y}"]`);
-        tile.removeClass("tile-unknown").addClass("tile-bomb");
+        tile.addClass("tile-bomb");
         tile.html("Ø");
     });
     generateScript();
