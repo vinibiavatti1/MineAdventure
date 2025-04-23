@@ -32,7 +32,7 @@ let time = {h: 0, m: 0, s: 0};
 function initGame() {
     loadPlayerName();
     document.oncontextmenu = function() {return false;};
-    $("#reset-btn").on("click", onResetClick);
+    $(".reset-btn").on("click", onResetClick);
     $("#start-btn").on("click", onStartClick);
     $("#next-btn").on("click", onNextClick);
     resetGame();
@@ -93,11 +93,11 @@ function renderMap() {
 }
 
 function renderData() {
+    const flags = Object.values(markers).filter(marker => marker === MARKERS.FLAG).length;
     $("#level").html(currentLevelIndex + 1);
     $("#level-count").html(LEVELS.length);
     $("#deaths").html(deaths);
-    $("#bombs").html(currentLevel.mines.length);
-    $("#flags").html(Object.values(markers).filter(marker => marker === MARKERS.FLAG).length);
+    $("#bombs").html(currentLevel.mines.length - flags);
 }
 
 function renderMarkers() {
@@ -137,7 +137,7 @@ function createTile(x, y, tile) {
             break;
         case TILES.BOMB:
             el.addClass("tile-bomb");
-            el.text("Ø");
+            el.text("!!!");
             break;
         case TILES.CLEAR:
             el.addClass("tile-0");
@@ -168,7 +168,7 @@ function onTileClick(evt) {
 }
 
 function processTile(x, y) {
-    if (hasFlag(x, y)) {
+    if (hasMarker(x, y)) {
         return;
     }
     const tile = getTile(x, y);
@@ -193,6 +193,7 @@ function processTile(x, y) {
 function processMine(x, y) {
     alert("BOOM!");
     $("#reset-btn").attr("disabled", false);
+    $("#reset-btn2").removeClass("d-none");
     setTile(x, y, TILES.BOMB);
     levelOver = true;
     deaths++;
@@ -237,8 +238,8 @@ function getMarker(x, y) {
     return null;
 }
 
-function hasFlag(x, y) {
-    return getMarker(x, y) === MARKERS.FLAG;
+function hasMarker(x, y) {
+    return getMarker(x, y) != null;
 }
 
 function setMarker(x, y, type) {
@@ -282,6 +283,7 @@ function isMine(x, y) {
 }
 
 function onResetClick() {
+    $("#reset-btn2").addClass("d-none");
     $("#reset-btn").attr("disabled", true);
     resetLevel();
 }

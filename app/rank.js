@@ -1,11 +1,11 @@
 $(initRank);
 
 let initialRank = [
-    {name: "Guruleni", time: {h: 0, m: 55, s: 59}, deaths: 102, date: "21/04/2025 11:47:40"},
-    {name: "Ana", time: {h: 1, m: 20, s: 13}, deaths: 98, date: "21/04/2025 14:35:40"},
-    {name: "Luli", time: {h: 2, m: 1, s: 20}, deaths: 186, date: "22/04/2025 16:20:00"},
-    {name: "Felipasso", time: {h: 2, m: 18, s: 34}, deaths: 195, date: "22/04/2025 20:05:31"},
-    {name: "Elder", time: {h: 4, m: 24, s: 24}, deaths: 1128, date: "22/04/2025 09:15:02"}
+    {name: "Guruleni", time: {h: 1, m: 30, s: 0}, deaths: 150, date: "21/04/2025 11:47:40"},
+    {name: "Ana", time: {h: 2, m: 0, s: 0}, deaths: 200, date: "21/04/2025 14:35:40"},
+    {name: "Luli", time: {h: 2, m: 30, s: 0}, deaths: 250, date: "22/04/2025 16:20:00"},
+    {name: "Felipasso", time: {h: 3, m: 0, s: 0}, deaths: 300, date: "22/04/2025 20:05:31"},
+    {name: "Elder", time: {h: 9, m: 59, s: 59}, deaths: 9999, date: "22/04/2025 09:15:02"}
 ];
 
 let rank = []

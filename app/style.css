@@ -26,9 +26,9 @@ body {
     cursor: pointer;
 }
 .tile-bomb {
-    background-color: #dc3545;
-    border: 4px solid #2c0b0e !important;
-    color: black;
+    background-color: #b02a37;
+    border: 4px outset #b02a37 !important;
+    color: white;
 }
 .tile-0 {
     background-color: #1a1d20 !important;
@@ -79,4 +79,9 @@ body {
     border: 4px outset #20c997!important;
     background-color: #06281e!important;
     color: #20c997!important;
+}
+.tile-flag {
+    border: 4px outset #b02a37!important;
+    background-color: #b02a37!important;
+    color: white!important;
 }

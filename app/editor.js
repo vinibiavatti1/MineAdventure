@@ -62,7 +62,7 @@ function onTileClick() {
         el.html("");
     } else {
         el.addClass("tile-bomb");
-        el.html("Ø");
+        el.html("!!!");
     }
     generateScript();
 }
@@ -98,7 +98,7 @@ function loadLevel() {
     selectedLevel.mines.forEach(mine => {
         const tile = $(`.tile[data-x="${mine.x}"][data-y="${mine.y}"]`);
         tile.addClass("tile-bomb");
-        tile.html("Ø");
+        tile.html("!!!");
     });
     generateScript();
 }
